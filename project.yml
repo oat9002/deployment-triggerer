@@ -1,0 +1,13 @@
+parameters: {}
+environment: {}
+packages:
+  - name: oat9002
+    shared: false
+    environment: {}
+    parameters: {}
+    functions:
+      - name: deployment-triggerer
+        main: ""
+        runtime: "go:default"
+        environment: {}
+        parameters: {}
