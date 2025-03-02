@@ -11,6 +11,7 @@ import (
 
 var once sync.Once
 var firebaseApp *firebase.App
+var firestoreClient *firestore.Client
 
 func initializeFirebase() (*firebase.App, error) {
 	var err error
@@ -32,7 +33,15 @@ func GetFireStoreClient() (*firestore.Client, error) {
 		log.Fatalf("error initializing app: %v\n", err)
 	}
 
-	return firebaseApp.Firestore(context.Background())
+	if firestoreClient != nil {
+		return firestoreClient, nil
+	}
+
+	once.Do(func() {
+		firestoreClient, err = firebaseApp.Firestore(context.Background())
+	})
+
+	return firestoreClient, err
 }
 
 func GetDocumentById(client *firestore.Client, collection string, id string) (map[string]interface{}, error) {
