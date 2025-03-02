@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"os"
 	"sync"
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
+	"google.golang.org/api/option"
 )
 
 var once sync.Once
@@ -21,7 +24,13 @@ func initializeFirebase() (*firebase.App, error) {
 	}
 
 	once.Do(func() {
-		firebaseApp, err = firebase.NewApp(context.Background(), nil)
+		serviceAccountKeyJSON := os.Getenv("FIREBASE_SERVICE_ACCOUNT_KEY_JSON")
+		if serviceAccountKeyJSON == "" {
+			err = fmt.Errorf("FIREBASE_SERVICE_ACCOUNT_KEY_JSON is required")
+		}
+
+		credential := option.WithCredentialsJSON([]byte(serviceAccountKeyJSON))
+		firebaseApp, err = firebase.NewApp(context.Background(), nil, credential)
 	})
 
 	return firebaseApp, err
