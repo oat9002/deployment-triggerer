@@ -5,7 +5,7 @@ import (
 )
 
 type Request struct {
-	Name string `json:"name"`
+	ServiceId int32 `json:"serviceId"`
 }
 
 type Response struct {
@@ -15,11 +15,21 @@ type Response struct {
 }
 
 func Main(in Request) (*Response, error) {
-	if in.Name == "" {
-		in.Name = "stranger"
+	if in.ServiceId <= 0 {
+		return nil, fmt.Errorf("serviceId must be greater than 0")
+	}
+
+	err := AddDeployment(in.ServiceId)
+	if err != nil {
+		return nil, err
+	}
+
+	serviceName, err := GetServiceName(in.ServiceId)
+	if err != nil {
+		return nil, err
 	}
 
 	return &Response{
-		Body: fmt.Sprintf("Hello %s!", in.Name),
+		Body: fmt.Sprintf("Service %s is added for deployment sucessfully!", serviceName),
 	}, nil
 }

@@ -15,6 +15,22 @@ type Deployment struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+func GetServiceName(serviceId int32) (string, error) {
+	client, err := GetFireStoreClient()
+	if err != nil {
+		log.Fatalf("error getting firestore client: %v\n", err)
+		return "", err
+	}
+
+	data, err := GetDocumentById(client, servicesCollection, strconv.Itoa(int(serviceId)))
+	if err != nil {
+		log.Fatalf("error getting service: %v\n", err)
+		return "", err
+	}
+
+	return data["name"].(string), nil
+}
+
 func AddDeployment(serviceId int32) error {
 	loc, err := time.LoadLocation("Asia/Bangkok")
 	if err != nil {
