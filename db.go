@@ -11,11 +11,11 @@ const deploymentsCollection = "deployments"
 const servicesCollection = "services"
 
 type Deployment struct {
-	ServiceId int32     `json:"service_id"`
+	ServiceId int       `json:"service_id"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
-func GetServiceName(serviceId int32) (string, error) {
+func GetServiceName(serviceId int) (string, error) {
 	client, err := GetFireStoreClient()
 	if err != nil {
 		log.Fatalf("error getting firestore client: %v\n", err)
@@ -31,7 +31,7 @@ func GetServiceName(serviceId int32) (string, error) {
 	return data["name"].(string), nil
 }
 
-func AddDeployment(serviceId int32) error {
+func AddDeployment(serviceId int) error {
 	loc, err := time.LoadLocation("Asia/Bangkok")
 	if err != nil {
 		log.Fatalf("error loading location: %v\n", err)

@@ -12,7 +12,8 @@ import (
 	"google.golang.org/api/option"
 )
 
-var once sync.Once
+var firebaseAppOnce sync.Once
+var fireStoreOnce sync.Once
 var firebaseApp *firebase.App
 var firestoreClient *firestore.Client
 
@@ -23,10 +24,10 @@ func initializeFirebase() (*firebase.App, error) {
 		return firebaseApp, nil
 	}
 
-	once.Do(func() {
-		serviceAccountKeyJSON := os.Getenv("FIREBASE_SERVICE_ACCOUNT_KEY_JSON")
+	firebaseAppOnce.Do(func() {
+		serviceAccountKeyJSON := os.Getenv("DEPLOYMENT_TRIGGERER_FIREBASE_SERVICE_ACCOUNT_KEY_JSON")
 		if serviceAccountKeyJSON == "" {
-			err = fmt.Errorf("FIREBASE_SERVICE_ACCOUNT_KEY_JSON is required")
+			err = fmt.Errorf("DEPLOYMENT_TRIGGERER_FIREBASE_SERVICE_ACCOUNT_KEY_JSON is required")
 		}
 
 		credential := option.WithCredentialsJSON([]byte(serviceAccountKeyJSON))
@@ -46,7 +47,7 @@ func GetFireStoreClient() (*firestore.Client, error) {
 		return firestoreClient, nil
 	}
 
-	once.Do(func() {
+	fireStoreOnce.Do(func() {
 		firestoreClient, err = firebaseApp.Firestore(context.Background())
 	})
 
