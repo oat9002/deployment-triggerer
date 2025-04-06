@@ -41,7 +41,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "deployment-triggerer*"
-          token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
           omitBody: true
           omitBodyDuringUpdate: true
