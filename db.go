@@ -11,8 +11,8 @@ const deploymentsCollection = "deployments"
 const servicesCollection = "services"
 
 type Deployment struct {
-	ServiceId int       `json:"service_id"`
-	CreatedAt time.Time `json:"created_at"`
+	ServiceId int       `firestore:"service_id"`
+	CreatedAt time.Time `firestore:"created_at"`
 }
 
 func GetServiceName(serviceId int) (string, error) {
