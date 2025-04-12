@@ -13,6 +13,7 @@ const servicesCollection = "services"
 type Deployment struct {
 	ServiceId int       `firestore:"service_id"`
 	CreatedAt time.Time `firestore:"created_at"`
+	IsSuccess bool      `firestore:"is_success"`
 }
 
 func GetServiceName(serviceId int) (string, error) {
@@ -59,6 +60,7 @@ func AddDeployment(serviceId int) error {
 	deploymentData := Deployment{
 		ServiceId: serviceId,
 		CreatedAt: time.Now().In(loc),
+		IsSuccess: false,
 	}
 
 	err = AddDocument(client, deploymentsCollection, deploymentData)
